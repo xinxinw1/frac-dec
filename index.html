@@ -2,47 +2,53 @@
 <html>
 
 <head>
-  <title>Fraction to Decimal</title>
+  <title>Fraction to Decimal 1.1</title>
   <meta charset="UTF-8">
-  <script src="/codes/libjs/prec-math/1.1/prec-math.js"></script>
+  <script src="lib/tools/tools.js"></script>
+  <script src="lib/prec-math/prec-math.js"></script>
   <script>
-  function $(a){
-    a = String(a);
-    return document.getElementById(a);
+  /* require tools 4.1.5 */
+  /* require prec-math 4.3.2 */
+  
+  function falp(a){
+    return a === false;
   }
   
   function decimal(a, b){
-    if (!isInt(a) || !isInt(b) || a == "" || b == "" || trimZeros(b) == "0"){
+    a = R.real(a);
+    b = R.real(b);
+    
+    if (falp(a) || falp(b) || b == "0"){
       display("", "");
       return false;
     }
     var numTens = 0;
-    if (isEven(b) || isDivFive(b)){
+    if (R.evnp(b) || R.div5p(b)){
       var numTwos = 0;
       var numFives = 0;
-      while (isEven(b)){
-        b = divr(b, 2);
+      while (R.evnp(b)){
+        b = R.div(b, "2");
         numTwos++;
       }
-      while (isDivFive(b)){
-        b = divr(b, 5);
+      while (R.div5p(b)){
+        b = R.div(b, "5");
         numFives++;
       }
       
       if (numTwos <= numFives){
         for (var i = numFives-numTwos; i >= 1; i--){
-          a = multr(a, 2);
+          a = R.mul(a, "2");
         }
         numTens = numFives;
       } else {
         for (var i = numTwos-numFives; i >= 1; i--){
-          a = multr(a, 5);
+          a = R.mul(a, "5");
         }
         numTens = numTwos;
       }
     }
-    var arr = quotAndRem(a, b);
-    ext = mDotLeft(arr[0], numTens);
+    var arr = R.qar(a, b);
+    ext = R.left(arr[0], numTens);
     a = arr[1];
     if (a != "0" && ext.indexOf(".") == -1)ext += ".";
     var len = ext.length;
@@ -64,10 +70,10 @@
     if (a == "0")return "";
     
     var n = "9";
-    while (modr(n, b) != "0"){
+    while (R.mod(n, b) != "0"){
       n += "9";
     }
-    var rep = multr(a, divr(n, b));
+    var rep = R.mul(a, R.div(n, b));
     
     for (var i = n.length-rep.length; i >= 1; i--){
       rep = "0" + rep;

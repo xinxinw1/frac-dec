@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Fraction to Decimal</title>
+  <meta charset="UTF-8">
+  <script src="/codes/libjs/prec-math/1.1/prec-math.js"></script>
+  <script>
+  function $(a){
+    a = String(a);
+    return document.getElementById(a);
+  }
+  
+  function decimal(a, b){
+    if (!isInt(a) || !isInt(b) || a == "" || b == "" || trimZeros(b) == "0"){
+      display("", "");
+      return false;
+    }
+    var numTens = 0;
+    if (isEven(b) || isDivFive(b)){
+      var numTwos = 0;
+      var numFives = 0;
+      while (isEven(b)){
+        b = divr(b, 2);
+        numTwos++;
+      }
+      while (isDivFive(b)){
+        b = divr(b, 5);
+        numFives++;
+      }
+      
+      if (numTwos <= numFives){
+        for (var i = numFives-numTwos; i >= 1; i--){
+          a = multr(a, 2);
+        }
+        numTens = numFives;
+      } else {
+        for (var i = numTwos-numFives; i >= 1; i--){
+          a = multr(a, 5);
+        }
+        numTens = numTwos;
+      }
+    }
+    var arr = quotAndRem(a, b);
+    ext = mDotLeft(arr[0], numTens);
+    a = arr[1];
+    if (a != "0" && ext.indexOf(".") == -1)ext += ".";
+    var len = ext.length;
+    var posDot = ext.indexOf(".");
+    if (posDot == -1)posDot = len;
+    if (a != "0"){
+      for (var i = numTens-(len-(posDot+1)); i >= 1; i--){
+        ext += "0";
+      }
+    }
+    
+    var rep = getRep(a, b);
+    if (rep == "0")rep = "";
+    
+    display(ext, rep);
+  }
+  
+  function getRep(a, b){
+    if (a == "0")return "";
+    
+    var n = "9";
+    while (modr(n, b) != "0"){
+      n += "9";
+    }
+    var rep = multr(a, divr(n, b));
+    
+    for (var i = n.length-rep.length; i >= 1; i--){
+      rep = "0" + rep;
+    }
+    
+    return rep;
+  }
+  
+  function isAllNines(a){
+    for (var i = a.length-1; i >= 0; i--){
+      if (a[i] != '9')return false;
+    }
+    return true;
+  }
+  
+  function display(norep, rep){
+    $("norep").innerHTML = norep;
+    $("rep").innerHTML = rep;
+  }
+  </script>
+</head>
+
+<body>
+  <p>
+    <input type="text" id="a" onkeyup="decimal(this.value, $('b').value);" size="4" autocomplete="off">
+    /
+    <input type="text" id="b" onkeyup="decimal($('a').value, this.value);" size="4" autocomplete="off">
+    <input type="submit" style="display: none;">
+  </p>
+  <p style="white-space: nowrap;">
+    = <span id="norep"></span><span id="rep" style="text-decoration: overline;"></span>
+  </p>
+</body>
+
+</html>

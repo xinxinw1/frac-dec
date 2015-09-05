@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Fraction to Decimal 1.1</title>
+  <title>Fraction to Decimal 1.2</title>
   <meta charset="UTF-8">
   <script src="lib/tools/tools.js"></script>
   <script src="lib/prec-math/prec-math.js"></script>
@@ -10,11 +10,15 @@
   /* require tools 4.1.5 */
   /* require prec-math 4.3.2 */
   
+  var rem = $.rem;
+  
   function falp(a){
     return a === false;
   }
   
   function decimal(a, b){
+    a = rem(/\.$/g, a);
+    b = rem(/\.$/g, b);
     a = R.real(a);
     b = R.real(b);
     
@@ -22,6 +26,13 @@
       display("", "");
       return false;
     }
+    
+    var move = Math.max(R.declen(a), R.declen(b));
+    if (move != 0){
+      a = R.right(a, move);
+      b = R.right(b, move);
+    }
+    
     var numTens = 0;
     if (R.evnp(b) || R.div5p(b)){
       var numTwos = 0;

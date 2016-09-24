@@ -2,21 +2,15 @@
 <html>
 
 <head>
-  <title>Fraction to Decimal 1.2</title>
+  <title>Fraction to Decimal</title>
   <meta charset="UTF-8">
   <script src="lib/tools/tools.js"></script>
   <script src="lib/prec-math/prec-math.js"></script>
   <script src="frac-dec.js"></script>
   <script>
   function dispDecimal(a, b){
-    a = R.real($.rem(/\.$/g, a));
-    b = R.real($.rem(/\.$/g, b));
-    if ($.falp(a) || $.falp(b) || R.zerop(b)){
-      display("", "");
-    } else {
-      var arr = decimal(a, b);
-      display(arr[0], arr[1]);
-    }
+    var arr = decimal(a, b);
+    display(arr[0], arr[1]);
   }
   
   function display(norep, rep){
@@ -24,13 +18,22 @@
     $("rep").innerHTML = rep;
   }
   </script>
+  <style>
+  h1, p {margin: 0; margin-bottom: 16px;}
+  a {color: #005EC8;}
+  .small {font-size: 25px;}
+  </style>
 </head>
 
 <body>
+  <h1>Fraction To Decimal <span class="small">(<a href="tests.html">tests</a> | <a href="https://github.com/xinxinw1/frac-dec">github</a>)</span></h1>
   <p>
-    <input type="text" id="a" onkeyup="dispDecimal(this.value, $('b').value);" size="4" autocomplete="off">
+    Note: Inputting large numbers might freeze your browser.
+  </p>
+  <p>
+    <input type="text" id="a" onkeyup="dispDecimal(this.value, $('b').value);" size="10" autocomplete="off">
     /
-    <input type="text" id="b" onkeyup="dispDecimal($('a').value, this.value);" size="4" autocomplete="off">
+    <input type="text" id="b" onkeyup="dispDecimal($('a').value, this.value);" size="10" autocomplete="off">
     <input type="submit" style="display: none;">
   </p>
   <p style="white-space: nowrap;">

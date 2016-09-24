@@ -1,6 +1,12 @@
 // given two real numbers a, b, where b != 0
 // returns ["<non-repeating>", "<repeating>"]
 function decimal(a, b){
+  a = R.real($.rem(/\.$/g, a));
+  b = R.real($.rem(/\.$/g, b));
+  if ($.falp(a) || $.falp(b) || R.zerop(b)){
+    return ["", ""];
+  }
+  
   var move = Math.max(R.declen(a), R.declen(b));
   if (move != 0){
     a = R.right(a, move);
@@ -14,7 +20,8 @@ function decimal(a, b){
   var curr = "";
   var k;
   var arr = ["0", b, R.addInt(b, b)];
-  var remainders = [];
+  var remainders = {};
+  var countRemainders = 0;
   var alen = a.length;
   for (var i = 0; true; i++){
     if (i < alen){
@@ -26,15 +33,16 @@ function decimal(a, b){
         quot += ".";
       }
       curr += "0";
-      var p = $.pos(curr, remainders)
-      if (p !== -1){
-        var numRep = remainders.length-p;
+      var p = remainders[curr];
+      if (p !== undefined){
+        var numRep = countRemainders-p;
         return [
           $.sli(quot, 0, quot.length-numRep),
           $.sli(quot, quot.length-numRep)
         ];
       }
-      remainders.push(curr);
+      remainders[curr] = countRemainders;
+      countRemainders++;
     }
     if (R.geInt(curr, b)){
       for (k = 2; R.geInt(curr, arr[k]); k++){

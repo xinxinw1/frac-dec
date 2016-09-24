@@ -6,98 +6,17 @@
   <meta charset="UTF-8">
   <script src="lib/tools/tools.js"></script>
   <script src="lib/prec-math/prec-math.js"></script>
+  <script src="frac-dec.js"></script>
   <script>
-  /* require tools 4.1.5 */
-  /* require prec-math 4.3.2 */
-  
-  var rem = $.rem;
-  
-  function falp(a){
-    return a === false;
-  }
-  
-  function decimal(a, b){
-    a = rem(/\.$/g, a);
-    b = rem(/\.$/g, b);
-    a = R.real(a);
-    b = R.real(b);
-    
-    if (falp(a) || falp(b) || b == "0"){
+  function dispDecimal(a, b){
+    a = R.real($.rem(/\.$/g, a));
+    b = R.real($.rem(/\.$/g, b));
+    if ($.falp(a) || $.falp(b) || R.zerop(b)){
       display("", "");
-      return false;
+    } else {
+      var arr = decimal(a, b);
+      display(arr[0], arr[1]);
     }
-    
-    var move = Math.max(R.declen(a), R.declen(b));
-    if (move != 0){
-      a = R.right(a, move);
-      b = R.right(b, move);
-    }
-    
-    var numTens = 0;
-    if (R.evnp(b) || R.div5p(b)){
-      var numTwos = 0;
-      var numFives = 0;
-      while (R.evnp(b)){
-        b = R.div(b, "2");
-        numTwos++;
-      }
-      while (R.div5p(b)){
-        b = R.div(b, "5");
-        numFives++;
-      }
-      
-      if (numTwos <= numFives){
-        for (var i = numFives-numTwos; i >= 1; i--){
-          a = R.mul(a, "2");
-        }
-        numTens = numFives;
-      } else {
-        for (var i = numTwos-numFives; i >= 1; i--){
-          a = R.mul(a, "5");
-        }
-        numTens = numTwos;
-      }
-    }
-    var arr = R.qar(a, b);
-    ext = R.left(arr[0], numTens);
-    a = arr[1];
-    if (a != "0" && ext.indexOf(".") == -1)ext += ".";
-    var len = ext.length;
-    var posDot = ext.indexOf(".");
-    if (posDot == -1)posDot = len;
-    if (a != "0"){
-      for (var i = numTens-(len-(posDot+1)); i >= 1; i--){
-        ext += "0";
-      }
-    }
-    
-    var rep = getRep(a, b);
-    if (rep == "0")rep = "";
-    
-    display(ext, rep);
-  }
-  
-  function getRep(a, b){
-    if (a == "0")return "";
-    
-    var n = "9";
-    while (R.mod(n, b) != "0"){
-      n += "9";
-    }
-    var rep = R.mul(a, R.div(n, b));
-    
-    for (var i = n.length-rep.length; i >= 1; i--){
-      rep = "0" + rep;
-    }
-    
-    return rep;
-  }
-  
-  function isAllNines(a){
-    for (var i = a.length-1; i >= 0; i--){
-      if (a[i] != '9')return false;
-    }
-    return true;
   }
   
   function display(norep, rep){
@@ -109,9 +28,9 @@
 
 <body>
   <p>
-    <input type="text" id="a" onkeyup="decimal(this.value, $('b').value);" size="4" autocomplete="off">
+    <input type="text" id="a" onkeyup="dispDecimal(this.value, $('b').value);" size="4" autocomplete="off">
     /
-    <input type="text" id="b" onkeyup="decimal($('a').value, this.value);" size="4" autocomplete="off">
+    <input type="text" id="b" onkeyup="dispDecimal($('a').value, this.value);" size="4" autocomplete="off">
     <input type="submit" style="display: none;">
   </p>
   <p style="white-space: nowrap;">

@@ -1,6 +1,6 @@
 # Fraction to Decimal
 
-http://xin-xin.me/code/frac-dec/
+https://xin-xin.me/code/frac-dec/
 
 Converts fractions into repeating decimal form.
 
